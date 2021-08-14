@@ -97,3 +97,7 @@ static/
 media/
 django_cache/
 db.sqlite3
+
+#################### CUSTOMIZED GIT IGNORE RULES ####################
+migrations/
+*.sqlite3

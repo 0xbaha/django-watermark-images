@@ -23,24 +23,48 @@ def add_text_overlay(image, text, font=_default_font):
     return image_with_text_overlay
 
 
-def add_watermark(image, watermark):
+def add_watermark(image, watermark, text, font=_default_font):
     rgba_image = image.convert('RGBA')
+
+    # WATERMARK
     rgba_watermark = watermark.convert('RGBA')
 
     image_x, image_y = rgba_image.size
     watermark_x, watermark_y = rgba_watermark.size
 
-    watermark_scale = max(image_x / (2.0 * watermark_x), image_y / (2.0 * watermark_y))
-    new_size = (int(watermark_x * watermark_scale), int(watermark_y * watermark_scale))
-    rgba_watermark = rgba_watermark.resize(new_size, resample=Image.ANTIALIAS)
+    # Determine the scale size of the watermark
+    temp_image = image_x/image_y
+    temp_watermark = watermark_x/watermark_y
+    temp = temp_watermark / temp_image
 
-    rgba_watermark_mask = rgba_watermark.convert("L").point(lambda x: min(x, 25))
+    # the constant value only works if:
+    #  - watermark image has width > height
+    #  - temp_watermark > temp_image
+    constant_value = 1.071      
+
+    # watermark fit to width
+    scale_size = constant_value * temp
+
+    watermark_scale = max(image_x / (scale_size * watermark_x), image_y / (scale_size * watermark_y))
+    new_size = (int(watermark_x * watermark_scale), int(watermark_y * watermark_scale))
+    rgba_watermark = rgba_watermark.resize(new_size)
+
+    rgba_watermark_mask = rgba_watermark.convert("L").point(lambda x: min(x, 90))
     rgba_watermark.putalpha(rgba_watermark_mask)
 
     watermark_x, watermark_y = rgba_watermark.size
     rgba_image.paste(rgba_watermark, ((image_x - watermark_x) // 2, (image_y - watermark_y) // 2), rgba_watermark_mask)
 
-    return rgba_image
+    # TEXT OVERLAY
+    text_position_vertical = 0.990
+    text_overlay = Image.new('RGBA', rgba_image.size, (255, 255, 255, 0))
+    image_draw = ImageDraw.Draw(text_overlay)
+    text_size_x, text_size_y = image_draw.textsize(text, font=font)
+    text_xy = ((rgba_image.size[0] / 2) - (text_size_x / 2), text_position_vertical * ((rgba_image.size[1]) - (text_size_y)))
+    image_draw.text(text_xy, text, font=font, fill=(255, 255, 255, 128))
+    image_with_text_overlay = Image.alpha_composite(rgba_image, text_overlay)
+
+    return image_with_text_overlay
 
 
 def lsb_encode(data, image):

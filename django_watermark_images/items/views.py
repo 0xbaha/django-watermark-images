@@ -107,10 +107,11 @@ class Watermark(FormView):
 
 
     def form_valid(self, form):
+        text = form.cleaned_data['text']
         image = Image.open(form.cleaned_data['image'])
         watermark_image = Image.open(form.cleaned_data['watermark_image'])
 
-        result_image = add_watermark(image, watermark_image)
+        result_image = add_watermark(image, watermark_image, text)
 
         result_id = _create_result_id()
         _save_source_image(image, result_id)

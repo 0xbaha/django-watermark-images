@@ -33,11 +33,13 @@ class WatermarkForm(forms.Form):
         self.helper.label_class = 'col-lg-2'
         self.helper.field_class = 'col-lg-10'
         self.helper.layout = Layout(
+            'text',
             'image',
             'watermark_image',
             Submit('submit', 'Submit', css_class='btn-default pull-right')
         )
 
+    text = forms.CharField(label='Text', max_length=100, required=False)
     image = forms.ImageField(label='Source Image', required=True)
     watermark_image = forms.ImageField(label='Watermark Image', required=True)
 
