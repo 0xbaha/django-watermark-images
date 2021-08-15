@@ -24,19 +24,19 @@
     </div>
     <div class="row item-row">
         <div class="col-lg-2 item-label">Image</div>
-        <div class="col-lg-10"><img class="img-responsive item-image" src="{{ object.image.url }}"></div>
+        <div class="col-lg-10"><img class="img-responsive item-image" src="{{ object.image_original.url }}"></div>
     </div>
     <div class="row item-row">
         <div class="col-lg-2 item-label">Text Overlay</div>
-        <div class="col-lg-10">{% generateimage 'items:text-overlay' source=object.image -- class="img-responsive item-image" %}</div>
+        <div class="col-lg-10">{% generateimage 'items:text-overlay' source=object.image_original -- class="img-responsive item-image" %}</div>
     </div>
     <div class="row item-row">
         <div class="col-lg-2 item-label">Watermark</div>
-        <div class="col-lg-10">{% generateimage 'items:watermark' source=object.image -- class="img-responsive item-image" %}</div>
+        <div class="col-lg-10">{% generateimage 'items:watermark' source=object.image_original -- class="img-responsive item-image" %}</div>
     </div>
     <div class="row item-row">
         <div class="col-lg-2 item-label">Hidden Watermark</div>
-        <div class="col-lg-10">{% generateimage 'items:hidden-watermark' source=object.image -- class="img-responsive item-image" %}</div>
+        <div class="col-lg-10">{% generateimage 'items:hidden-watermark' source=object.image_original -- class="img-responsive item-image" %}</div>
     </div>
 </div>
 {% endblock %}

@@ -37,10 +37,20 @@ def add_watermark(image, watermark, text, font=_default_font):
     temp_watermark = watermark_x/watermark_y
     temp = temp_watermark / temp_image
 
-    # the constant value only works if:
-    #  - watermark image has width > height
-    #  - temp_watermark > temp_image
-    constant_value = 1.071      
+    # If watermark landscape
+    if temp_watermark > 1:
+    
+        # The constant value below only works if:
+        #  - watermark image has width > height
+        #  - temp_watermark > temp_image
+        constant_value = 1.071
+
+    # If watermark portrait
+    else:
+
+        # The constant value below still need improvement
+        #   - some images do not fit
+        constant_value = 5.419
 
     # watermark fit to width
     scale_size = constant_value * temp
@@ -56,12 +66,18 @@ def add_watermark(image, watermark, text, font=_default_font):
     rgba_image.paste(rgba_watermark, ((image_x - watermark_x) // 2, (image_y - watermark_y) // 2), rgba_watermark_mask)
 
     # TEXT OVERLAY
-    text_position_vertical = 0.990
     text_overlay = Image.new('RGBA', rgba_image.size, (255, 255, 255, 0))
     image_draw = ImageDraw.Draw(text_overlay)
     text_size_x, text_size_y = image_draw.textsize(text, font=font)
-    text_xy = ((rgba_image.size[0] / 2) - (text_size_x / 2), text_position_vertical * ((rgba_image.size[1]) - (text_size_y)))
-    image_draw.text(text_xy, text, font=font, fill=(255, 255, 255, 128))
+    # Header
+    text_position_header = 0.015
+    text_xy_header = ((rgba_image.size[0] / 2) - (text_size_x / 2), text_position_header * ((rgba_image.size[1]) - (text_size_y)))
+    image_draw.text(text_xy_header, text, font=font, fill=(255, 255, 255, 128)) 
+    # Footer
+    text_position_footer = 0.99
+    text_xy_footer = ((rgba_image.size[0] / 2) - (text_size_x / 2), text_position_footer * ((rgba_image.size[1]) - (text_size_y)))
+    image_draw.text(text_xy_footer, text, font=font, fill=(255, 255, 255, 128))
+    # Text Overlay
     image_with_text_overlay = Image.alpha_composite(rgba_image, text_overlay)
 
     return image_with_text_overlay
@@ -100,14 +116,16 @@ class TextOverlayProcessor(object):
     font = ImageFont.truetype('/usr/share/fonts/dejavu/DejaVuSans-Bold.ttf', 36)
 
     def process(self, image):
-        return add_text_overlay(image, 'django-watermark-images', font=self.font)
+        text_overlay = settings.WATERMARK_TEXT
+        return add_text_overlay(image, text_overlay, font=self.font)
 
 
 class WatermarkProcessor(object):
     watermark = Image.open(settings.WATERMARK_IMAGE)
 
     def process(self, image):
-        return add_watermark(image, self.watermark)
+        text_overlay = settings.WATERMARK_TEXT
+        return add_watermark(image, self.watermark, text_overlay)
 
 
 class HiddenWatermarkProcessor(object):

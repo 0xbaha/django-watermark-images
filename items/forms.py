@@ -65,7 +65,7 @@ class SteganographyForm(forms.Form):
 class ItemForm(forms.ModelForm):
     class Meta:
         model = Item
-        fields = ('title', 'description', 'image')
+        fields = ('title', 'description', 'image_original')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -77,6 +77,6 @@ class ItemForm(forms.ModelForm):
         self.helper.layout = Layout(
             'title',
             'description',
-            'image',
+            'image_original',
             Submit('submit', 'Submit', css_class='btn-default pull-right')
         )

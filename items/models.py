@@ -8,11 +8,11 @@ from django_extensions.db.models import TitleDescriptionModel, TimeStampedModel
 
 
 def image_upload_to(instance, filename):
-    return 'original_image/{uuid}/{filename}'.format(uuid=uuid.uuid4().hex, filename=filename)
+    return 'image-original/{uuid}/{filename}'.format(uuid=uuid.uuid4().hex, filename=filename)
 
 
 class Item(TitleDescriptionModel, TimeStampedModel):
-    image = models.ImageField(_('original image'), upload_to=image_upload_to)
+    image_original = models.ImageField(_('original image'), upload_to=image_upload_to)
 
     def get_absolute_url(self):
         return reverse_lazy('item-detail', kwargs={'pk': self.pk})

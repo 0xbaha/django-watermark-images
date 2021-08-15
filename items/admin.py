@@ -4,7 +4,7 @@ from .models import Item
 
 
 class ItemAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'created', 'modified', 'image')
+    list_display = ('id', 'title', 'created', 'modified', 'image_original')
 
 
 admin.site.register(Item, ItemAdmin)

@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+import datetime
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -144,6 +145,9 @@ CACHES = {
     }
 }
 
+
+THIS_YEAR = datetime.date.today().year
+WATERMARK_TEXT = '(c) ' + str(THIS_YEAR) + ' django-watermark-images'
 WATERMARK_IMAGE = os.path.join(BASE_DIR, 'assets/img/Coat_of_arms_of_Ireland.png')
 
 PLACEHOLDER_IMAGE = os.path.join(BASE_DIR, 'assets/img/missing_image.png')
