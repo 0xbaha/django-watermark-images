@@ -11,4 +11,4 @@ Pillow==8.3.2
 python-magic==0.4.24
 pytz==2021.1
 six==1.16.0
-sqlparse==0.4.1
+sqlparse==0.4.2
